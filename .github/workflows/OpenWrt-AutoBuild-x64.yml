@@ -128,7 +128,7 @@ jobs:
       uses: actions/upload-artifact@main
       with:
         name: OpenWrt-2410-X64
-        path: ./artifact/
+        path: ./artifact/*.*
 
     - name: Create release
       id: release
@@ -140,16 +140,12 @@ jobs:
         token: ${{ secrets.GH_TOKEN }}
         body: |
           ### 📒 固件信息
-          - ⚽ 固件名称：${{ env.FILE_NAME }}-${{ env.KERNEL }}
+          - ⚽ 固件名称：OpenWrt-2410-X64
           - 🔴 固件大小：Kernel=32M，rootfs=968M
-          - 💻 平台架构: ${{ env.PRODUCT_NAME }}
-          - 🌻 固件源码: ${{ env.REPO_URL }}
-          - 💝 源码分支: ${{ env.REPO_BRANCH }}
-          - 🚀 内核版本: ${{ env.KERNEL }}
+          - 💻 平台架构: x86-64
           - 🌐 默认地址：192.168.18.1
           - 🔑 默认密码：无密码
-          - 🧊 更新时间：${{ env.date }}
-          - 🎈 源码哈希值：${{ env.hash }}
-        artifacts: ${{ env.FIRMWARE }}/*
+          - 🧊 更新时间：$(TZ=Asia/Shanghai date "+%Y.%m.%d")
+        artifacts: ./artifact/*.*
     - name: Print Disk Space After
       run: df -h
