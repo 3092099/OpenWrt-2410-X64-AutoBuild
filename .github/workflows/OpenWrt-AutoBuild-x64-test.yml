@@ -1,4 +1,4 @@
-name: OpenWrt-AutoBuild-x64
+name: OpenWrt-AutoBuild-x64-test
 
 on:
 #  schedule:
@@ -85,6 +85,17 @@ jobs:
         echo "TARGET_DEVICE_ARCH=${TARGET_DEVICE_ARCH}" >>$GITHUB_ENV
         latest_release="$(curl -s https://github.com/openwrt/openwrt/tags | grep -Eo "v[0-9\.]+\-*r*c*[0-9]*.tar.gz" | sed -n '/[2-9][4-9]/p' | sed -n 1p | sed 's/.tar.gz//g' | sed 's/v//g')"
         echo "latest_release=${latest_release}" >>$GITHUB_ENV
+        Author=$(git show -s --date=short --format="%an")
+        Date=$(git show -s --date=short --format="%ci")
+        Commit=$(git show -s --date=short --format="%s")
+        Hash=$(git show -s --date=short --format="%H")
+        echo "author=$Author" >> $GITHUB_ENV
+        echo "date=$Date" >> $GITHUB_ENV
+        echo "commit=$Commit" >> $GITHUB_ENV
+        echo "hash=$Hash" >> $GITHUB_ENV
+        echo "DATE=$(date "+%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+        echo "TAG=$(date "+%Y%m%d")" >> $GITHUB_ENV
+        echo "start=$(date +%s)" >> $GITHUB_ENV
     - name: Cache
       uses: HiGarfield/cachewrtbuild@main
       with:
@@ -118,34 +129,37 @@ jobs:
         mv openwrt/bin/targets/x86/64/openwrt-x86-64-generic-squashfs-combined-efi.img.gz ./artifact/
         mv openwrt/bin/targets/x86/64/openwrt-x86-64-generic-squashfs-combined.img.gz ./artifact/
         cd ./artifact/
-        mv openwrt-x86-64-generic-squashfs-combined.img.gz OpenWrt-X86-$(TZ=Asia/Shanghai date "+%Y.%m.%d")-bios.img.gz
-        mv openwrt-x86-64-generic-squashfs-combined-efi.img.gz OpenWrt-X86-$(TZ=Asia/Shanghai date "+%Y.%m.%d")-uefi.img.gz
-        md5sum OpenWrt-X86-$(TZ=Asia/Shanghai date "+%Y.%m.%d")-bios.img.gz > OpenWrt-X86-$(TZ=Asia/Shanghai date "+%Y.%m.%d")-bios.img.gz.md5
-        md5sum OpenWrt-X86-$(TZ=Asia/Shanghai date "+%Y.%m.%d")-uefi.img.gz > OpenWrt-X86-$(TZ=Asia/Shanghai date "+%Y.%m.%d")-uefi.img.gz.md5
+        mv openwrt-x86-64-generic-squashfs-combined.img.gz OpenWrt-X64-test-$(TZ=Asia/Shanghai date "+%Y.%m.%d")-bios.img.gz
+        mv openwrt-x86-64-generic-squashfs-combined-efi.img.gz OpenWrt-X64-test-$(TZ=Asia/Shanghai date "+%Y.%m.%d")-uefi.img.gz
+        md5sum OpenWrt-X64-test-$(TZ=Asia/Shanghai date "+%Y.%m.%d")-bios.img.gz > OpenWrt-X64-test-$(TZ=Asia/Shanghai date "+%Y.%m.%d")-bios.img.gz.md5
+        md5sum OpenWrt-X64-test-$(TZ=Asia/Shanghai date "+%Y.%m.%d")-uefi.img.gz > OpenWrt-X64-test-$(TZ=Asia/Shanghai date "+%Y.%m.%d")-uefi.img.gz.md5
         ls -Ahl
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
       with:
-        name: OpenWrt-2410-X64
+        name: OpenWrt-2410-X64-test
         path: ./artifact/*.*
 
     - name: Create release
       id: release
       uses: ncipollo/release-action@v1
       with:
-        name: OpenWrt-2410-X64
+        name: OpenWrt-2410-X64-test
         allowUpdates: true
-        tag: OpenWrt-2410-X64
+        tag: OpenWrt-2410-X64-test
         token: ${{ secrets.GH_TOKEN }}
         body: |
-          ### 📒 固件信息
-          - ⚽ 固件名称：OpenWrt-2410-X64
+          - ⚽ 固件名称：OpenWrt-2410-X64-test
           - 🔴 固件大小：Kernel=32M，rootfs=968M
           - 💻 平台架构: x86-64
-          - 🌐 默认地址：192.168.18.1
+          - 🌻 固件源码: https://github.com/coolsnowwolf/lede
+          - 💝 源码分支: master
+          - 🚀 内核版本: ${{ env.KERNEL }}
+          - 🎈 Lcui版本：${latest_release}
+          - 🌐 默认地址：192.168.1.11
           - 🔑 默认密码：无密码
-          - 🧊 更新时间：$(TZ=Asia/Shanghai date "+%Y.%m.%d")
+          - 🧊 更新时间：${{ env.date }}
         artifacts: ./artifact/*.*
     - name: Print Disk Space After
       run: df -h
