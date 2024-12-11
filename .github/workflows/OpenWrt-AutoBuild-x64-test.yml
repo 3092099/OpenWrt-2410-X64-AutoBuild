@@ -153,7 +153,7 @@ jobs:
           - ⚽ 固件名称：OpenWrt-2410-X64-test
           - 🔴 固件大小：Kernel=32M，rootfs=968M
           - 💻 平台架构: x86-64
-          - 🌻 固件源码: https://github.com/coolsnowwolf/lede
+          - 🌻 固件源码: https://github.com/openwrt/openwrt
           - 💝 源码分支: master
           - 🚀 内核版本: ${{ env.KERNEL }}
           - 🎈 Lcui版本：${latest_release}
