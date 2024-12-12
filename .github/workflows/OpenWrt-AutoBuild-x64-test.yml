@@ -50,6 +50,11 @@ jobs:
         cp -r ./SCRIPTS/X86/. ./SCRIPTS/
         cp -r ./SCRIPTS/. ./
         /bin/bash 01_get_ready.sh
+    - name: DIY Script
+      working-directory: ${{ github.workspace }}/openwrt
+      run: |
+        cp -r ../SCRIPTS/DIY/x64_test_diy-part.sh ./
+        /bin/bash x64_test_diy-part.sh
     - name: Prepare Package
       working-directory: ${{ github.workspace }}/openwrt
       run: |
