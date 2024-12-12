@@ -6,8 +6,8 @@
 # By: GXNAS
 #=======================================================
 
-echo "package/new/luci-theme-argon/luasrc/view/themes/argon/footer.htm文件内容："
-cat package/new/luci-theme-argon/luasrc/view/themes/argon/footer.htm
+echo "package/new/luci-theme-argon/luasrc/view/themes/argon/footer_login.htm文件内容："
+cat package/new/luci-theme-argon/luasrc/view/themes/argon/footer_login.htm
 echo "========================="
 
 echo "开始 DIY 配置……"
