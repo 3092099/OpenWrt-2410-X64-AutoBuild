@@ -6,8 +6,20 @@
 # By: GXNAS
 #=======================================================
 
-echo "package文件内内容："
-ls -Ralh --color package/
+echo "package/new/addition-trans-zh/files/zzz-default-settings文件内容："
+cat package/new/addition-trans-zh/files/zzz-default-settings
+echo "========================="
+
+echo "package/base-files/files/bin/config_generate文件内容："
+cat package/base-files/files/bin/config_generate
+echo "========================="
+
+echo "package/feeds/luci/luci-app-ttyd文件夹有："
+ls -Ralh --color package/feeds/luci/luci-app-ttyd
+echo "========================="
+
+echo "feeds/luci/themes/文件夹有："
+ls -Ralh --color feeds/luci/themes/
 echo "========================="
 
 echo "开始 DIY 配置……"
@@ -15,30 +27,27 @@ echo "========================="
 build_date=$(TZ=Asia/Shanghai date "+%Y.%m.%d")
 
 # 修改主机名字，修改你喜欢的就行（不能纯数字或者使用中文）
-sed -i "/uci commit system/i\uci set system.@system[0].hostname='OpenWrt-GXNAS'" package/base-files/etc/config/zzz-default-settings
-sed -i "s/hostname='.*'/hostname='OpenWrt-GXNAS'/g" scripts/config_generate
+sed -i "/uci commit system/i\uci set system.@system[0].hostname='OpenWrt-GXNAS'" package/new/addition-trans-zh/files/zzz-default-settings
+sed -i "s/hostname='.*'/hostname='OpenWrt-GXNAS'/g" package/base-files/files/bin/config_generate
 
 # 修改默认IP
-sed -i 's/192.168.1.1/192.168.1.11/g' scripts/config_generate
-sed -i 's/192.168.1.1/192.168.1.11/g' scripts/config_generate
+sed -i 's/192.168.1.1/192.168.1.11/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/192.168.1.11/g' package/base-files/files/bin/config_generate
 
 # 设置密码为空（安装固件时无需密码登陆，然后自己修改想要的密码）
-sed -i '/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF./d' package/base-files/etc/config/zzz-default-settings
+sed -i '/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF./d' package/new/addition-trans-zh/files/zzz-default-settings
 
 # 调整 x86 型号只显示 CPU 型号
-sed -i 's/${g}.*/${a}${b}${c}${d}${e}${f}${hydrid}/g' package/lean/autocore/files/x86/autocore
+sed -i 's/${g}.*/${a}${b}${c}${d}${e}${f}${hydrid}/g' package/new/autocore
 
 # 设置ttyd免帐号登录
-sed -i 's/\/bin\/login/\/bin\/login -f root/' feeds/packages/utils/ttyd/files/ttyd.config
+# sed -i 's/\/bin\/login/\/bin\/login -f root/' feeds/packages/utils/ttyd/files/ttyd.config
 
 # 默认 shell 为 bash
 sed -i 's/\/bin\/ash/\/bin\/bash/g' package/base-files/files/etc/passwd
 
 # samba解除root限制
 sed -i 's/invalid users = root/#&/g' feeds/packages/net/samba4/files/smb.conf.template
-
-# coremark跑分定时清除
-sed -i '/\* \* \* \/etc\/coremark.sh/d' feeds/packages/utils/coremark/*
 
 # 修改 argon 为默认主题
 sed -i '/set luci.main.mediaurlbase=\/luci-static\/bootstrap/d' feeds/luci/themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
@@ -49,14 +58,14 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/*/Make
 sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=65535' package/base-files/files/etc/sysctl.conf
 
 # 显示增加编译时间
-sed -i "s/DISTRIB_REVISION='R[0-9]\+\.[0-9]\+\.[0-9]\+'/DISTRIB_REVISION='@R$build_date'/g" package/base-files/etc/config/zzz-default-settings
-sed -i 's/LEDE/OpenWrt-2410-X64-测试版 by GXNAS build/g' package/base-files/etc/config/zzz-default-settings
+sed -i "s/DISTRIB_REVISION='R[0-9]\+\.[0-9]\+\.[0-9]\+'/DISTRIB_REVISION='@R$build_date'/g" package/new/addition-trans-zh/files/zzz-default-settings
+sed -i 's/openwrt/OpenWrt-2410-X64-测试版 by GXNAS build/g' package/new/addition-trans-zh/files/zzz-default-settings
 
 # 修改右下角脚本版本信息
-sed -i 's/<a class=\"luci-link\" href=\"https:\/\/github.com\/openwrt\/luci\" target=\"_blank\">Powered by <%= ver.luciname %> (<%= ver.luciversion %>)<\/a>/OpenWrt-2410-X64-测试版 by GXNAS build @R'"$build_date"'/' package/luci-theme-argon/luasrc/view/themes/argon/footer.htm
-sed -i 's|<a href="https://github.com/jerrykuku/luci-theme-argon" target="_blank">ArgonTheme <%# vPKG_VERSION %></a>|<a class="luci-link" href="https://wp.gxnas.com" target="_blank">🌐固件编译者：【GXNAS博客】</a>|' package/luci-theme-argon/luasrc/view/themes/argon/footer.htm
-sed -i 's|<%= ver.distversion %>|<a href="https://d.gxnas.com" target="_blank">👆点这里下载最新版本</a>|' package/luci-theme-argon/luasrc/view/themes/argon/footer.htm
-sed -i "/<a class=\"luci-link\"/d; /<a href=\"https:\/\/github.com\/jerrykuku\/luci-theme-argon\"/d; s|<%= ver.distversion %>|OpenWrt-2410-X64-测试版 by GXNAS build @R$build_date|" package/luci-theme-argon/luasrc/view/themes/argon/footer_login.htm
+sed -i 's/<a class=\"luci-link\" href=\"https:\/\/github.com\/openwrt\/luci\" target=\"_blank\">Powered by <%= ver.luciname %> (<%= ver.luciversion %>)<\/a>/OpenWrt-2410-X64-测试版 by GXNAS build @R'"$build_date"'/' package/new/luci-theme-argon/luasrc/view/themes/argon/footer.htm
+sed -i 's|<a href="https://github.com/jerrykuku/luci-theme-argon" target="_blank">ArgonTheme <%# vPKG_VERSION %></a>|<a class="luci-link" href="https://wp.gxnas.com" target="_blank">🌐固件编译者：【GXNAS博客】</a>|' package/new/luci-theme-argon/luasrc/view/themes/argon/footer.htm
+sed -i 's|<%= ver.distversion %>|<a href="https://d.gxnas.com" target="_blank">👆点这里下载最新版本</a>|' package/new/luci-theme-argon/luasrc/view/themes/argon/footer.htm
+sed -i "/<a class=\"luci-link\"/d; /<a href=\"https:\/\/github.com\/jerrykuku\/luci-theme-argon\"/d; s|<%= ver.distversion %>|OpenWrt-2410-X64-测试版 by GXNAS build @R$build_date|" package/new/luci-theme-argon/luasrc/view/themes/argon/footer_login.htm
 
 # 修改欢迎banner
 cp -f $GITHUB_WORKSPACE/SCRIPTS/DIY/banner package/base-files/files/etc/banner
