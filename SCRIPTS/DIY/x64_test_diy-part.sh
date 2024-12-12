@@ -6,10 +6,6 @@
 # By: GXNAS
 #=======================================================
 
-echo "/etc/openwrt_release文件内容："
-cat /etc/openwrt_release
-echo "========================="
-
 echo "开始 DIY 配置……"
 echo "========================="
 build_date=$(TZ=Asia/Shanghai date "+%Y%m%d")
@@ -43,10 +39,6 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/*/Make
 
 # 最大连接数修改为65535
 sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=65535' package/base-files/files/etc/sysctl.conf
-
-# 显示增加编译时间
-sed -i "s/DISTRIB_REVISION='R[0-9]\+\.[0-9]\+\.[0-9]\+'/DISTRIB_REVISION='@R$build_date'/g" /etc/openwrt_release
-sed -i 's/openwrt/OpenWrt-2410-X64-测试版 by GXNAS build/g' /etc/openwrt_release
 
 # 修改右下角脚本版本信息
 sed -i 's/<a class=\"luci-link\" href=\"https:\/\/github.com\/openwrt\/luci\" target=\"_blank\">Powered by <%= ver.luciname %> (<%= ver.luciversion %>)<\/a>/OpenWrt-2410-X64-测试版 by GXNAS build @R'"$build_date"'/' package/new/luci-theme-argon/luasrc/view/themes/argon/footer.htm
