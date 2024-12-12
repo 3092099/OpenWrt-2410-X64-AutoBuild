@@ -6,13 +6,13 @@
 # By: GXNAS
 #=======================================================
 
-echo "package/new/luci-theme-argon/luasrc/view/themes/argon/footer_login.htm文件内容："
-cat package/new/luci-theme-argon/luasrc/view/themes/argon/footer_login.htm
+echo "/etc/openwrt_release文件内容："
+cat /etc/openwrt_release
 echo "========================="
 
 echo "开始 DIY 配置……"
 echo "========================="
-build_date=$(TZ=Asia/Shanghai date "+%Y.%m.%d")
+build_date=$(TZ=Asia/Shanghai date "+%Y%m%d")
 
 # 修改主机名字，修改你喜欢的就行（不能纯数字或者使用中文）
 sed -i "/uci commit system/i\uci set system.@system[0].hostname='OpenWrt-GXNAS'" package/new/addition-trans-zh/files/zzz-default-settings
@@ -45,8 +45,8 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/*/Make
 sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=65535' package/base-files/files/etc/sysctl.conf
 
 # 显示增加编译时间
-sed -i "s/DISTRIB_REVISION='R[0-9]\+\.[0-9]\+\.[0-9]\+'/DISTRIB_REVISION='@R$build_date'/g" package/new/addition-trans-zh/files/zzz-default-settings
-sed -i 's/openwrt/OpenWrt-2410-X64-测试版 by GXNAS build/g' package/new/addition-trans-zh/files/zzz-default-settings
+sed -i "s/DISTRIB_REVISION='R[0-9]\+\.[0-9]\+\.[0-9]\+'/DISTRIB_REVISION='@R$build_date'/g" /etc/openwrt_release
+sed -i 's/openwrt/OpenWrt-2410-X64-测试版 by GXNAS build/g' /etc/openwrt_release
 
 # 修改右下角脚本版本信息
 sed -i 's/<a class=\"luci-link\" href=\"https:\/\/github.com\/openwrt\/luci\" target=\"_blank\">Powered by <%= ver.luciname %> (<%= ver.luciversion %>)<\/a>/OpenWrt-2410-X64-测试版 by GXNAS build @R'"$build_date"'/' package/new/luci-theme-argon/luasrc/view/themes/argon/footer.htm
