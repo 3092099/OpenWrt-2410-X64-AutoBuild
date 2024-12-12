@@ -6,20 +6,24 @@
 # By: GXNAS
 #=======================================================
 
+echo "package文件内内容："
+ls -Ralh --color package/
+echo "========================="
+
 echo "开始 DIY 配置……"
 echo "========================="
 build_date=$(TZ=Asia/Shanghai date "+%Y.%m.%d")
 
 # 修改主机名字，修改你喜欢的就行（不能纯数字或者使用中文）
-sed -i "/uci commit system/i\uci set system.@system[0].hostname='OpenWrt-GXNAS'" package/lean/default-settings/files/zzz-default-settings
-sed -i "s/hostname='.*'/hostname='OpenWrt-GXNAS'/g" ./package/base-files/files/bin/config_generate
+sed -i "/uci commit system/i\uci set system.@system[0].hostname='OpenWrt-GXNAS'" package/base-files/etc/config/zzz-default-settings
+sed -i "s/hostname='.*'/hostname='OpenWrt-GXNAS'/g" scripts/config_generate
 
 # 修改默认IP
-sed -i 's/192.168.1.1/192.168.1.11/g' package/base-files/files/bin/config_generate
-sed -i 's/192.168.1.1/192.168.1.11/g' package/base-files/luci2/bin/config_generate
+sed -i 's/192.168.1.1/192.168.1.11/g' scripts/config_generate
+sed -i 's/192.168.1.1/192.168.1.11/g' scripts/config_generate
 
 # 设置密码为空（安装固件时无需密码登陆，然后自己修改想要的密码）
-sed -i '/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF./d' package/lean/default-settings/files/zzz-default-settings
+sed -i '/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF./d' package/base-files/etc/config/zzz-default-settings
 
 # 调整 x86 型号只显示 CPU 型号
 sed -i 's/${g}.*/${a}${b}${c}${d}${e}${f}${hydrid}/g' package/lean/autocore/files/x86/autocore
@@ -45,8 +49,8 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/*/Make
 sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=65535' package/base-files/files/etc/sysctl.conf
 
 # 显示增加编译时间
-sed -i "s/DISTRIB_REVISION='R[0-9]\+\.[0-9]\+\.[0-9]\+'/DISTRIB_REVISION='@R$build_date'/g" package/lean/default-settings/files/zzz-default-settings
-sed -i 's/LEDE/OpenWrt-2410-X64-测试版 by GXNAS build/g' package/lean/default-settings/files/zzz-default-settings
+sed -i "s/DISTRIB_REVISION='R[0-9]\+\.[0-9]\+\.[0-9]\+'/DISTRIB_REVISION='@R$build_date'/g" package/base-files/etc/config/zzz-default-settings
+sed -i 's/LEDE/OpenWrt-2410-X64-测试版 by GXNAS build/g' package/base-files/etc/config/zzz-default-settings
 
 # 修改右下角脚本版本信息
 sed -i 's/<a class=\"luci-link\" href=\"https:\/\/github.com\/openwrt\/luci\" target=\"_blank\">Powered by <%= ver.luciname %> (<%= ver.luciversion %>)<\/a>/OpenWrt-2410-X64-测试版 by GXNAS build @R'"$build_date"'/' package/luci-theme-argon/luasrc/view/themes/argon/footer.htm
