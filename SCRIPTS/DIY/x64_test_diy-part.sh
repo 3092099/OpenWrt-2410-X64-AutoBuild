@@ -6,20 +6,8 @@
 # By: GXNAS
 #=======================================================
 
-echo "package/new/addition-trans-zh/files/zzz-default-settings文件内容："
-cat package/new/addition-trans-zh/files/zzz-default-settings
-echo "========================="
-
-echo "package/base-files/files/bin/config_generate文件内容："
-cat package/base-files/files/bin/config_generate
-echo "========================="
-
-echo "package/feeds/luci/luci-app-ttyd文件夹有："
-ls -Ralh --color package/feeds/luci/luci-app-ttyd
-echo "========================="
-
-echo "feeds/luci/themes/文件夹有："
-ls -Ralh --color feeds/luci/themes/
+echo "package/new/luci-theme-argon/luasrc/view/themes/argon/footer.htm文件内容："
+cat package/new/luci-theme-argon/luasrc/view/themes/argon/footer.htm
 echo "========================="
 
 echo "开始 DIY 配置……"
@@ -32,7 +20,6 @@ sed -i "s/hostname='.*'/hostname='OpenWrt-GXNAS'/g" package/base-files/files/bin
 
 # 修改默认IP
 sed -i 's/192.168.1.1/192.168.1.11/g' package/base-files/files/bin/config_generate
-sed -i 's/192.168.1.1/192.168.1.11/g' package/base-files/files/bin/config_generate
 
 # 设置密码为空（安装固件时无需密码登陆，然后自己修改想要的密码）
 sed -i '/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF./d' package/new/addition-trans-zh/files/zzz-default-settings
@@ -44,7 +31,7 @@ sed -i 's/${g}.*/${a}${b}${c}${d}${e}${f}${hydrid}/g' package/new/autocore
 # sed -i 's/\/bin\/login/\/bin\/login -f root/' feeds/packages/utils/ttyd/files/ttyd.config
 
 # 默认 shell 为 bash
-sed -i 's/\/bin\/ash/\/bin\/bash/g' package/base-files/files/etc/passwd
+# sed -i 's/\/bin\/ash/\/bin\/bash/g' package/base-files/files/etc/passwd
 
 # samba解除root限制
 sed -i 's/invalid users = root/#&/g' feeds/packages/net/samba4/files/smb.conf.template
